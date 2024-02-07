@@ -1,13 +1,14 @@
-type Cars = {
+type ListCars = {
 	id: number;
 	car_name: string;
 	day_rate: number;
 	month_rate: number;
-	image: string;
+    image: string;
+    Orders: ListOrders
 };
 
 
-type Orders = {
+type ListOrders = {
     id: number;
 	car_id: number;
     order_date: Date;
@@ -15,5 +16,5 @@ type Orders = {
     dropoff_date: Date;
     pickup_location: string;
     dropof_location: string;
-    car : Cars
+    car : ListCars
 };
