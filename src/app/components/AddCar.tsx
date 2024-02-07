@@ -178,12 +178,6 @@ const AddCar: React.FC<ModalLoginProps> = ({ open, onOk, onCancel }) => {
 					>
 						Create
 					</button>
-					{/* <button
-						onClick={() => router.push("/welcome-investor")}
-						className="ml-2 text-white bg-red-700 hover:bg-blue-800 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-					>
-						Cancel
-					</button> */}
 				</form>
 			</Modal>
 		</>

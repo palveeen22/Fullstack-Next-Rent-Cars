@@ -19,6 +19,7 @@ const AddOrder: React.FC<AddOrder> = ({ open, onOk, onCancel, carId }) => {
 		dropoff_date: "",
 		pickup_location: "",
 		dropoff_location: "",
+		carsId: carId,
 	});
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [error, setError] = useState("");

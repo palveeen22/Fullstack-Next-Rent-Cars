@@ -3,7 +3,7 @@ import { Modal } from "antd";
 import { Icon } from "@iconify/react";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
-import { formatDate } from "@/helpers";
+import toast, { Toaster } from "react-hot-toast";
 
 interface orderEdit {
 	orderId: number;
@@ -56,13 +56,9 @@ const EditOrder: React.FC<orderEdit> = ({ open, onOk, onCancel, orderId }) => {
 		fetchData();
 	}, [orderId]);
 
-	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = event.target;
-		setInput((prevInput) => ({
-			...prevInput,
-			[name]: value,
-		}));
-	};
+	useEffect(() => {
+		setIsModalOpen(open);
+	}, [open]);
 
 	const showModal = () => {
 		setIsModalOpen(true);
@@ -101,10 +97,64 @@ const EditOrder: React.FC<orderEdit> = ({ open, onOk, onCancel, orderId }) => {
 				required_error: "Dropoff Location is Required",
 			})
 			.min(1, { message: "Dropoff Location is Required" }),
-		carsId: z.number(),
 	});
 
 	const router = useRouter();
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		try {
+			e.preventDefault();
+
+			const validatedInput = {
+				...input,
+			};
+
+			const parsed = OrderInput.safeParse(validatedInput);
+
+			console.log(parsed, "<<,");
+
+			if (parsed.success == false) {
+				setError(parsed.error.issues[0].message);
+			} else {
+				const finalInput = JSON.stringify(input);
+				// console.log(finalInput);
+				const response = await fetch(
+					`http://localhost:3000/api/orders/${orderId}`,
+					{
+						method: "PUT",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: finalInput,
+					}
+				);
+
+				console.log(response, "XIXIXI");
+
+				if (!response.ok) {
+					throw new Error("Edit Order Failed");
+				}
+				toast.success("Order Updated");
+				router.refresh();
+				onOk();
+				fetchData();
+				router.push("/orders");
+			}
+		} catch (error) {
+			if (error instanceof z.ZodError) {
+				console.log(error.issues);
+			} else {
+				console.log(error);
+			}
+		}
+	};
+
+	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = event.target;
+		setInput((prevInput) => ({
+			...prevInput,
+			[name]: value,
+		}));
+	};
 
 	return (
 		<>
@@ -121,10 +171,7 @@ const EditOrder: React.FC<orderEdit> = ({ open, onOk, onCancel, orderId }) => {
 				footer={null}
 				onCancel={handleCancel}
 			>
-				<form
-					className="mx-auto pt-9 pb-9"
-					// onSubmit={handleSubmit}
-				>
+				<form className="mx-auto pt-9 pb-9" onSubmit={handleSubmit}>
 					<div className="relative z-0 w-full mb-5 group">
 						<input
 							type="date"

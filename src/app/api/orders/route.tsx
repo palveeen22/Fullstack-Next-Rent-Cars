@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import schema from "./schema";
 import prisma from "../../../../prisma/client";
 
+type TProps = {
+	params: { id: string };
+};
+
 // GET ALL Orders
 export async function GET(req: NextRequest) {
 	const cars = await prisma.orders.findMany({
@@ -13,24 +17,23 @@ export async function GET(req: NextRequest) {
 }
 
 // ADD ORDER
-export async function POST(req: Request, carsId: string) {
-	console.log("masuk id", carsId);
+export async function POST(req: Request, { params }: TProps) {
+	console.log("masuk id", params.id);
 	try {
-		const {
-			// order_date,
-			pickup_date,
-			dropoff_date,
-			pickup_location,
-			dropoff_location,
-		} = (await req.json()) as {
-			order_date: Date;
-			pickup_date: Date;
-			dropoff_date: Date;
-			pickup_location: string;
-			dropoff_location: string;
-			carsId: string;
-		};
+		const { pickup_date, dropoff_date, pickup_location, dropoff_location } =
+			(await req.json()) as {
+				order_date: Date;
+				pickup_date: Date;
+				dropoff_date: Date;
+				pickup_location: string;
+				dropoff_location: string;
+				carsId: string;
+			};
 		console.log("masuk");
+
+		const car = await prisma.cars.findUnique({
+			where: { id: parseInt(params.id) },
+		});
 
 		const order = await prisma.orders.create({
 			data: {
@@ -39,7 +42,7 @@ export async function POST(req: Request, carsId: string) {
 				dropoff_date: new Date(dropoff_date),
 				pickup_location,
 				dropoff_location,
-				carsId: Number(carsId),
+				carsId: Number(car?.id),
 			},
 		});
 		// console.log(project, "<<< project");

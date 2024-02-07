@@ -28,6 +28,8 @@ export async function DELETE(req: NextRequest, { params }: TProps) {
 		where: { id: parseInt(params.id) },
 	});
 
+	console.log(params.id);
+
 	await prisma.orders.delete({
 		where: { id: order?.id },
 	});
@@ -36,28 +38,51 @@ export async function DELETE(req: NextRequest, { params }: TProps) {
 }
 
 // PUT order by id
-// export async function PUT(req: NextRequest, { params }: TProps) {
-// 	const body = await req.json();
-// 	const validation = schema.safeParse(body);
+export async function PUT(req: NextRequest, { params }: TProps) {
+	console.log("masuk id", params.id);
+	try {
+		const { pickup_date, dropoff_date, pickup_location, dropoff_location } =
+			(await req.json()) as {
+				order_date: Date;
+				pickup_date: Date;
+				dropoff_date: Date;
+				pickup_location: string;
+				dropoff_location: string;
+				carsId: string;
+			};
+		console.log("masuk");
 
-// 	if (!validation.success) {
-// 		return NextResponse.json(validation.error.errors, { status: 400 });
-// 	}
+		const order = await prisma.orders.findUnique({
+			where: { id: parseInt(params.id) },
+		});
 
-// 	const order = await prisma.order.findUnique({
-// 		where: { id: parseInt(params.id) },
-// 	});
+		const newOrder = await prisma.orders.update({
+			where: { id: order?.id },
+			data: {
+				order_date: new Date(),
+				pickup_date: new Date(pickup_date),
+				dropoff_date: new Date(dropoff_date),
+				pickup_location,
+				dropoff_location,
+			},
+		});
 
-// 	const updatedOrder = await prisma.order.update({
-// 		where: { id: order?.id },
-// 		data: {
-// 			pickUpLoc: body.pickUpLoc,
-// 			dropOffLoc: body.dropOffLoc,
-// 			pickUpTime: body.pickUpTime,
-// 			pickUpDate: body.pickUpDate,
-// 			dropOffDate: body.dropOffDate,
-// 		},
-// 	});
-
-// 	return NextResponse.json(updatedOrder);
-// }
+		return NextResponse.json({
+			order: {
+				order_date: newOrder.order_date,
+				pickup_date: newOrder.pickup_date,
+				dropoff_date: newOrder.dropoff_date,
+				pickup_location: newOrder.pickup_location,
+				dropoff_location: newOrder.dropoff_location,
+			},
+		});
+	} catch (error: any) {
+		return new NextResponse(
+			JSON.stringify({
+				status: "error",
+				message: error.message,
+			}),
+			{ status: 500 }
+		);
+	}
+}

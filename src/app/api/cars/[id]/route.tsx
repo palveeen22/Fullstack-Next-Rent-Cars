@@ -35,7 +35,7 @@ export async function DELETE(req: NextRequest, { params }: TProps) {
 	return NextResponse.json({ message: "car successfully deleted" });
 }
 
-// PUT order by id
+// PUT car by id
 export async function PUT(req: NextRequest, { params }: TProps) {
 	const body = await req.json();
 	const validation = schema.safeParse(body);
@@ -50,7 +50,7 @@ export async function PUT(req: NextRequest, { params }: TProps) {
 
 	console.log("masukk>>");
 
-	const updatedOrder = await prisma.cars.update({
+	const updateCar = await prisma.cars.update({
 		where: { id: car?.id },
 		data: {
 			car_name: body.car_name,
@@ -60,5 +60,5 @@ export async function PUT(req: NextRequest, { params }: TProps) {
 		},
 	});
 
-	return NextResponse.json(updatedOrder);
+	return NextResponse.json(updateCar);
 }
