@@ -32,7 +32,7 @@ const DetailsCar = ({ params }: { params: { id: string } }) => {
 	};
 
 	const handleDelete = async (id: number) => {
-		console.log(id, "numnum");
+		// console.log(id, "numnum");
 		const response = await fetch(`http://localhost:3000/api/cars/${id}`, {
 			method: "DELETE",
 		});
@@ -59,17 +59,43 @@ const DetailsCar = ({ params }: { params: { id: string } }) => {
 					<p className="text-xl font-mono text-[#000] hover:underline">Back</p>
 				</div>
 			</Link>
-			<div className="flex flex-col gap-4">
+			<div className="flex flex-col gap-4" key={car.id}>
 				<img src={car.image} className="rounded-t-3xl h-2/3 object-cover" />
-				<button onClick={() => handleDelete(car.id)}>Delete car</button>
+				<div className="w-full bg-[#E5E4E2] flex justify-between gap-2 paddingX py-3 rounded-3xl">
+					<div className="w-[50%] flex flex-col gap-4">
+						<h3 className="text-2xl font-light font-mono">Details : </h3>
+						<p className="font-mono">{car.car_name}</p>
+						<div className="flex justify-between gap-2 items-center">
+							<p className="font-semibold font-mono">Price : </p>
+							<span className="flex justify-start gap-2">
+								<p className="font-semibold font-mono">{car.day_rate}</p>
+								<p className="text-[#353935] font-mono">/ Days</p>
+							</span>
+							<span className="flex justify-start gap-2">
+								<p className="font-semibold font-mono">{car.month_rate}</p>
+								<p className="text-[#353935] font-mono">/ Month</p>
+							</span>
+						</div>
+					</div>
+					<div className="w-[50%] flex flex-col justify-center gap-4">
+						<AddOrder
+							carId={car.id}
+							open={isModalOpen}
+							onOk={closeModal}
+							onCancel={closeModal}
+						/>
+						<button
+							className="flex justify-start gap-4 items-center w-[20%] mx-auto bg-red-600 text-white p-2 rounded-xl"
+							onClick={() => handleDelete(car.id)}
+						>
+							<Icon icon="basil:folder-delete-solid" width={25} />
+							Delete Car
+						</button>
+					</div>
+				</div>
+
 				<div className="flex justify-between items-center">
 					<p>List Order with this Car</p>
-					<AddOrder
-						carId={car.id}
-						open={isModalOpen}
-						onOk={closeModal}
-						onCancel={closeModal}
-					/>
 				</div>
 				{car?.Orders?.map((order) => {
 					return <TableComponent order={order} />;

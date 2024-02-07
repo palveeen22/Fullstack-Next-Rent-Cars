@@ -99,11 +99,11 @@ const AddOrder: React.FC<AddOrder> = ({ open, onOk, onCancel, carId }) => {
 	return (
 		<>
 			<button
-				className="bg-[#ffcd3c] text-[#fff] m-2  ml-auto p-2 flex items-center gap-2 rounded-xl hover:bg-blue-500"
 				onClick={showModal}
+				className="flex justify-start gap-4 items-center w-[20%] mx-auto bg-blue-600 text-white p-2 rounded-xl"
 			>
-				<Icon icon="icon-park-solid:add" width={40} />
-				Add Order
+				<Icon icon="game-icons:car-key" width={25} />
+				Book Now!
 			</button>
 			<Modal
 				title="Input Your Order Here.."

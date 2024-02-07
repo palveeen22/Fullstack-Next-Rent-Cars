@@ -23,31 +23,6 @@ const EditOrder: React.FC<orderEdit> = ({ open, onOk, onCancel, orderId }) => {
 	});
 	const [error, setError] = useState("");
 
-	// const fetchData = async () => {
-	// 	try {
-	// 		const response = await fetch(
-	// 			`http://localhost:3000/api/orders/${orderId}`
-	// 		);
-
-	// 		if (!response.ok) {
-	// 			throw new Error("Failed fetching data");
-	// 		}
-
-	// 		const responseJSON = await response.json();
-	// 		setOrder(responseJSON);
-	// 	} catch (error) {
-	// 		if (error instanceof Error) {
-	// 			console.log(error.message);
-	// 		} else {
-	// 			console.log(error);
-	// 		}
-	// 	}
-	// };
-
-	// useEffect(() => {
-	// 	fetchData();
-	// }, []);
-
 	const fetchData = async () => {
 		try {
 			const response = await fetch(
@@ -130,37 +105,6 @@ const EditOrder: React.FC<orderEdit> = ({ open, onOk, onCancel, orderId }) => {
 	});
 
 	const router = useRouter();
-	// const handleSubmit = async (e: React.SyntheticEvent) => {
-	// 	e.preventDefault();
-	// 	const formData = { ...input, carsId: carId };
-
-	// 	const parsed = OrderInput.safeParse(formData);
-
-	// 	if (!parsed.success) {
-	// 		setError(parsed.error.issues[0].message);
-	// 		return;
-	// 	}
-
-	// 	try {
-	// 		const response = await fetch("http://localhost:3000/api/orders", {
-	// 			method: "POST",
-	// 			headers: {
-	// 				"Content-Type": "application/json",
-	// 			},
-	// 			body: JSON.stringify(parsed.data),
-	// 		});
-
-	// 		if (!response.ok) {
-	// 			throw new Error("Add Order Failed");
-	// 		}
-	// 		toast.success("Order Added");
-	// 		onOk(); // Call onOk to close modal and perhaps refresh data
-	// 		router.push("/orders"); // Navigate to orders page
-	// 	} catch (error) {
-	// 		console.error(error);
-	// 		toast.error("Failed to add order.");
-	// 	}
-	// };
 
 	return (
 		<>

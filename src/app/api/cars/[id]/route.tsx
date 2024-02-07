@@ -6,23 +6,23 @@ type TProps = {
 	params: { id: string };
 };
 
-// GET order by id
+// GET car by id
 export async function GET(req: NextRequest, { params }: TProps) {
-	const order = await prisma.cars.findUnique({
+	const car = await prisma.cars.findUnique({
 		where: { id: parseInt(params.id) },
 		include: {
 			Orders: true,
 		},
 	});
 
-	if (!order) {
+	if (!car) {
 		return NextResponse.json({ error: "Car not found" }, { status: 404 });
 	}
 
-	return NextResponse.json(order);
+	return NextResponse.json(car);
 }
 
-// DELETE order by id
+// DELETE car by id
 export async function DELETE(req: NextRequest, { params }: TProps) {
 	const car = await prisma.cars.findUnique({
 		where: { id: parseInt(params.id) },
@@ -32,32 +32,33 @@ export async function DELETE(req: NextRequest, { params }: TProps) {
 		where: { id: car?.id },
 	});
 
-	return NextResponse.json({ message: "Order successfully deleted" });
+	return NextResponse.json({ message: "car successfully deleted" });
 }
 
 // PUT order by id
-// export async function PUT(req: NextRequest, { params }: TProps) {
-// 	const body = await req.json();
-// 	const validation = schema.safeParse(body);
+export async function PUT(req: NextRequest, { params }: TProps) {
+	const body = await req.json();
+	const validation = schema.safeParse(body);
 
-// 	if (!validation.success) {
-// 		return NextResponse.json(validation.error.errors, { status: 400 });
-// 	}
+	if (!validation.success) {
+		return NextResponse.json(validation.error.errors, { status: 400 });
+	}
 
-// 	const order = await prisma.order.findUnique({
-// 		where: { id: parseInt(params.id) },
-// 	});
+	const car = await prisma.cars.findUnique({
+		where: { id: parseInt(params.id) },
+	});
 
-// 	const updatedOrder = await prisma.order.update({
-// 		where: { id: order?.id },
-// 		data: {
-// 			pickUpLoc: body.pickUpLoc,
-// 			dropOffLoc: body.dropOffLoc,
-// 			pickUpTime: body.pickUpTime,
-// 			pickUpDate: body.pickUpDate,
-// 			dropOffDate: body.dropOffDate,
-// 		},
-// 	});
+	console.log("masukk>>");
 
-// 	return NextResponse.json(updatedOrder);
-// }
+	const updatedOrder = await prisma.cars.update({
+		where: { id: car?.id },
+		data: {
+			car_name: body.car_name,
+			day_rate: body.day_rate,
+			month_rate: body.month_rate,
+			image: body.image,
+		},
+	});
+
+	return NextResponse.json(updatedOrder);
+}

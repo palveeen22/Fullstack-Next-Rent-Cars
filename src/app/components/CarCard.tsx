@@ -1,5 +1,8 @@
 import formatCurrency from "@/helpers";
-import React from "react";
+import React, { useState } from "react";
+import EditCar from "./EditCar";
+import { Icon } from "@iconify/react";
+import Link from "next/link";
 
 type props = {
 	car: ListCars;
@@ -7,6 +10,11 @@ type props = {
 };
 
 const CarCard = ({ car }: props) => {
+	const [isModalOpen, setIsModalOpen] = useState(false);
+
+	const closeModal = () => {
+		setIsModalOpen(false);
+	};
 	return (
 		<div key={car.id} className="flex flex-col gap-4 border shadow rounded-3xl">
 			<img
@@ -27,10 +35,23 @@ const CarCard = ({ car }: props) => {
 					</span>
 				</div>
 			</div>
-
-			{/* <button className="bg-[#ffcd3c] text-[#fff] m-2 w-[40%] mx-auto rounded-xl p-1">
-				BOOK NOW
-			</button> */}
+			<div className="flex justify-center gap-2 items-center px-4">
+				<EditCar
+					carId={car.id}
+					open={isModalOpen}
+					onOk={closeModal}
+					onCancel={closeModal}
+				/>
+				<Link href={`/list-cars/${car.id}`}>
+					<button
+						className="flex justify-start gap-4 items-center m-4 mx-auto bg-blue-600 text-white p-2 rounded-xl"
+						// onClick={showModal}
+					>
+						See Details
+						<Icon icon="solar:arrow-right-outline" width={25} />
+					</button>
+				</Link>
+			</div>
 		</div>
 	);
 };
