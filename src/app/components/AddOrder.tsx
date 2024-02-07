@@ -1,24 +1,32 @@
 import React, { useState } from "react";
 import { Modal } from "antd";
 import { Icon } from "@iconify/react";
-import { useRouter } from "next/navigation";
 import { z } from "zod";
+import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 
 interface ModalLoginProps {
 	open: boolean;
 	onOk: () => void;
 	onCancel: () => void;
+	carId: number;
 }
 
-const AddCar: React.FC<ModalLoginProps> = ({ open, onOk, onCancel }) => {
+const AddOrder: React.FC<ModalLoginProps> = ({
+	open,
+	onOk,
+	onCancel,
+	carId,
+}) => {
+	console.log(carId, "xxx");
 	const [input, setInput] = useState({
-		car_name: "",
-		day_rate: 0,
-		month_rate: 0,
-		image: "",
+		pickup_date: "",
+		dropoff_date: "",
+		pickup_location: "",
+		dropoff_location: "",
 	});
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [error, setError] = useState("");
 
 	const showModal = () => {
 		setIsModalOpen(true);
@@ -31,70 +39,65 @@ const AddCar: React.FC<ModalLoginProps> = ({ open, onOk, onCancel }) => {
 	const handleCancel = () => {
 		setIsModalOpen(false);
 	};
-	const [error, setError] = useState("");
 
-	const CarInput = z.object({
-		car_name: z
+	const OrderInput = z.object({
+		pickup_date: z
 			.string({
-				invalid_type_error: "Name is Required",
-				required_error: "Name is Required",
+				invalid_type_error: "Pickup Date is Required",
+				required_error: "Pickup Date is Required",
 			})
-			.min(1, { message: "Name is Required" }),
-		day_rate: z
-			.number({
-				invalid_type_error: "Day Rate is Required",
-				required_error: "Day Rate is Required",
-			})
-			.min(0, { message: "Day Rate must be a positive number" }), // Assuming day_rate should be positive
-		month_rate: z
-			.number({
-				invalid_type_error: "Month Rate is Required",
-				required_error: "Month Rate is Required",
-			})
-			.min(0, { message: "Month Rate must be a positive number" }), // Assuming month_rate should be positive
-		image: z
+			.min(1, { message: "Pickup Date is Required" }),
+		dropoff_date: z
 			.string({
-				invalid_type_error: "Image is Required",
-				required_error: "Image is Required",
+				invalid_type_error: "Dropoff Date is Required",
+				required_error: "Dropoff Date is Required",
 			})
-			.min(1, { message: "Image is Required" }),
+			.min(1, { message: "Dropoff Date is Required" }),
+		pickup_location: z
+			.string({
+				invalid_type_error: "Pickup Location is Required",
+				required_error: "Pickup Location is Required",
+			})
+			.min(1, { message: "Pickup Location is Required" }),
+		dropoff_location: z
+			.string({
+				invalid_type_error: "Dropoff Location is Required",
+				required_error: "Dropoff Location is Required",
+			})
+			.min(1, { message: "Dropoff Location is Required" }),
+		carsId: z.number(),
 	});
 
 	const router = useRouter();
 	const handleSubmit = async (e: React.SyntheticEvent) => {
+		e.preventDefault();
+		const formData = { ...input, carsId: carId };
+
+		const parsed = OrderInput.safeParse(formData);
+
+		if (!parsed.success) {
+			setError(parsed.error.issues[0].message);
+			return;
+		}
+
 		try {
-			e.preventDefault();
+			const response = await fetch("http://localhost:3000/api/orders", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(parsed.data),
+			});
 
-			const parsed = CarInput.safeParse(input);
-			// console.log(parsed);
-
-			if (parsed.success == false) {
-				setError(parsed.error.issues[0].message);
-			} else {
-				const finalInput = JSON.stringify(input);
-				// console.log(finalInput);
-				const response = await fetch("http://localhost:3000/api/cars", {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: finalInput,
-				});
-
-				if (!response.ok) {
-					throw new Error("Add Car Failed");
-				}
-				toast.success("Car Added");
-				router.refresh();
-				onOk();
-				router.push("/list-cars");
+			if (!response.ok) {
+				throw new Error("Add Order Failed");
 			}
+			toast.success("Order Added");
+			onOk(); // Call onOk to close modal and perhaps refresh data
+			router.push("/orders"); // Navigate to orders page
 		} catch (error) {
-			if (error instanceof z.ZodError) {
-				console.log(error.issues);
-			} else {
-				console.log(error);
-			}
+			console.error(error);
+			toast.error("Failed to add order.");
 		}
 	};
 
@@ -105,10 +108,10 @@ const AddCar: React.FC<ModalLoginProps> = ({ open, onOk, onCancel }) => {
 				onClick={showModal}
 			>
 				<Icon icon="icon-park-solid:add" width={40} />
-				Add Car
+				Add Order
 			</button>
 			<Modal
-				title="Input Your Car Here.."
+				title="Input Your Order Here.."
 				open={isModalOpen}
 				onOk={handleOk}
 				footer={null}
@@ -117,58 +120,62 @@ const AddCar: React.FC<ModalLoginProps> = ({ open, onOk, onCancel }) => {
 				<form className="mx-auto pt-9 pb-9" onSubmit={handleSubmit}>
 					<div className="relative z-0 w-full mb-5 group">
 						<input
-							type="text"
-							name="car_name"
-							id="car_name"
-							className=" text-black block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+							type="date"
+							name="pickup_date"
+							id="pickup_date"
+							className="text-black block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
 							placeholder=" "
-							onChange={(e) => setInput({ ...input, car_name: e.target.value })}
+							onChange={(e) =>
+								setInput({ ...input, pickup_date: e.target.value })
+							}
 						/>
-						<label className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-							Car Name
+						<label className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+							Pickup Date
 						</label>
 					</div>
 					<div className="relative z-0 w-full mb-5 group">
 						<input
-							type="number"
-							name="day_rate"
-							id="day_rate"
+							type="date"
+							name="dropoff_date"
+							id="dropoff_date"
 							className="text-black block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
 							placeholder=" "
 							onChange={(e) =>
-								setInput({ ...input, day_rate: Number(e.target.value) })
+								setInput({ ...input, dropoff_date: e.target.value })
 							}
 						/>
 						<label className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-							Day Rate
-						</label>
-					</div>
-					<div className="relative z-0 w-full mb-5 group">
-						<input
-							type="number"
-							name="month_rate"
-							id="month_rate"
-							className="text-black block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-							placeholder=" "
-							onChange={(e) =>
-								setInput({ ...input, month_rate: Number(e.target.value) })
-							}
-						/>
-						<label className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-							Montly Rate
+							Dropoff Date
 						</label>
 					</div>
 					<div className="relative z-0 w-full mb-5 group">
 						<input
 							type="text"
-							name="image"
-							id="image"
+							name="pickup_location"
+							id="pickup_location"
 							className="text-black block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
 							placeholder=" "
-							onChange={(e) => setInput({ ...input, image: e.target.value })}
+							onChange={(e) =>
+								setInput({ ...input, pickup_location: e.target.value })
+							}
 						/>
 						<label className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-							Image Car
+							Pickup Location
+						</label>
+					</div>
+					<div className="relative z-0 w-full mb-5 group">
+						<input
+							type="text"
+							name="dropoff_location"
+							id="dropoff_location"
+							className="text-black block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+							placeholder=" "
+							onChange={(e) =>
+								setInput({ ...input, dropoff_location: e.target.value })
+							}
+						/>
+						<label className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+							Dropoff Location
 						</label>
 					</div>
 
@@ -178,16 +185,10 @@ const AddCar: React.FC<ModalLoginProps> = ({ open, onOk, onCancel }) => {
 					>
 						Create
 					</button>
-					{/* <button
-						onClick={() => router.push("/welcome-investor")}
-						className="ml-2 text-white bg-red-700 hover:bg-blue-800 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-					>
-						Cancel
-					</button> */}
 				</form>
 			</Modal>
 		</>
 	);
 };
 
-export default AddCar;
+export default AddOrder;

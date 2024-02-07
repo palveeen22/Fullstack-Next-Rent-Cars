@@ -53,7 +53,7 @@ const ListCars = () => {
 				<AddCar open={isModalOpen} onOk={closeModal} onCancel={closeModal} />
 				<div className="grid grid-cols-4 gap-4">
 					{cars.map((car) => (
-						<Link href={`/orders`}>
+						<Link href={`/list-cars/${car.id}`}>
 							<CarCard car={car} />
 						</Link>
 					))}

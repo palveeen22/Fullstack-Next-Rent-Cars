@@ -27,9 +27,10 @@ const CarCard = ({ car }: props) => {
 					</span>
 				</div>
 			</div>
-			<button className="bg-[#ffcd3c] text-[#fff] m-2 w-[40%] mx-auto rounded-xl p-1">
+
+			{/* <button className="bg-[#ffcd3c] text-[#fff] m-2 w-[40%] mx-auto rounded-xl p-1">
 				BOOK NOW
-			</button>
+			</button> */}
 		</div>
 	);
 };

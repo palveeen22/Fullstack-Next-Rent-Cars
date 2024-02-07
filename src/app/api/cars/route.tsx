@@ -4,11 +4,7 @@ import prisma from "../../../../prisma/client";
 
 // GET ALL CARS
 export async function GET(req: NextRequest) {
-	const cars = await prisma.cars.findMany({
-		include: {
-			Orders: true,
-		},
-	});
+	const cars = await prisma.cars.findMany();
 	return NextResponse.json(cars);
 }
 

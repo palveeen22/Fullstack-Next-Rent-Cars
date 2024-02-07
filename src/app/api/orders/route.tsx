@@ -5,9 +5,6 @@ import prisma from "../../../../prisma/client";
 // GET ALL Orders
 export async function GET(req: NextRequest) {
 	const cars = await prisma.orders.findMany({
-		include: {
-			car_id: true,
-		},
 		orderBy: {
 			id: "asc",
 		},
@@ -16,24 +13,53 @@ export async function GET(req: NextRequest) {
 }
 
 // ADD ORDER
-export async function POST(req: NextRequest) {
-	const body = await req.json();
-	const validation = schema.safeParse(body);
+export async function POST(req: Request, carsId: string) {
+	console.log("masuk id", carsId);
+	try {
+		const {
+			// order_date,
+			pickup_date,
+			dropoff_date,
+			pickup_location,
+			dropoff_location,
+		} = (await req.json()) as {
+			order_date: Date;
+			pickup_date: Date;
+			dropoff_date: Date;
+			pickup_location: string;
+			dropoff_location: string;
+			carsId: string;
+		};
+		console.log("masuk");
 
-	if (!validation.success) {
-		return NextResponse.json(validation.error.errors, { status: 400 });
+		const order = await prisma.orders.create({
+			data: {
+				order_date: new Date(),
+				pickup_date: new Date(pickup_date),
+				dropoff_date: new Date(dropoff_date),
+				pickup_location,
+				dropoff_location,
+				carsId: Number(carsId),
+			},
+		});
+		// console.log(project, "<<< project");
+
+		return NextResponse.json({
+			order: {
+				order_date: order.order_date,
+				pickup_date: order.pickup_date,
+				dropoff_date: order.dropoff_date,
+				pickup_location: order.pickup_location,
+				dropoff_location: order.dropoff_location,
+			},
+		});
+	} catch (error: any) {
+		return new NextResponse(
+			JSON.stringify({
+				status: "error",
+				message: error.message,
+			}),
+			{ status: 500 }
+		);
 	}
-
-	const orderNew = await prisma.orders.create({
-		data: {
-			order_date: body.order_date,
-			pickup_date: body.pickup_date,
-			dropoff_date: body.dropoff_date,
-			pickup_location: body.pickup_location,
-			dropoff_location: body.dropoff_location,
-			carsId: body.carsId,
-		},
-	});
-
-	return NextResponse.json(orderNew, { status: 201 });
 }
