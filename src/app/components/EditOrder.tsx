@@ -3,16 +3,23 @@ import { Modal } from "antd";
 import { Icon } from "@iconify/react";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
-import toast, { Toaster } from "react-hot-toast";
+import Swal from "sweetalert2";
 
 interface orderEdit {
+	refetch: Function;
 	orderId: number;
 	open: boolean;
 	onOk: () => void;
 	onCancel: () => void;
 }
 
-const EditOrder: React.FC<orderEdit> = ({ open, onOk, onCancel, orderId }) => {
+const EditOrder: React.FC<orderEdit> = ({
+	open,
+	onOk,
+	onCancel,
+	orderId,
+	refetch,
+}) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [order, setOrder] = useState({} as ListOrders);
 	const [input, setInput] = useState({
@@ -133,11 +140,10 @@ const EditOrder: React.FC<orderEdit> = ({ open, onOk, onCancel, orderId }) => {
 				if (!response.ok) {
 					throw new Error("Edit Order Failed");
 				}
-				toast.success("Order Updated");
+				Swal.fire("successfully edit your booking!");
+				await refetch();
 				router.refresh();
 				onOk();
-				fetchData();
-				router.push("/orders");
 			}
 		} catch (error) {
 			if (error instanceof z.ZodError) {

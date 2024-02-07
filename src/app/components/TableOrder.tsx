@@ -78,6 +78,7 @@ const TableOrder = ({ order, refetch }: props) => {
 								<Icon icon="mingcute:edit-fill" width={40} />
 							</button> */}
 							<EditOrder
+								refetch={refetch}
 								orderId={order.id}
 								open={isModalOpen}
 								onOk={closeModal}

@@ -5,6 +5,7 @@ import { Icon } from "@iconify/react";
 import TableComponent from "@/app/components/TableOrder";
 import AddOrder from "@/app/components/AddOrder";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 const DetailsCar = ({ params }: { params: { id: string } }) => {
 	const router = useRouter();
@@ -37,6 +38,7 @@ const DetailsCar = ({ params }: { params: { id: string } }) => {
 			method: "DELETE",
 		});
 		if (response.ok) {
+			Swal.fire("successfully delete!");
 			router.refresh();
 			router.push("/list-cars");
 		}
