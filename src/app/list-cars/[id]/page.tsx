@@ -80,6 +80,7 @@ const DetailsCar = ({ params }: { params: { id: string } }) => {
 					<div className="w-[50%] flex flex-col justify-center gap-4">
 						<AddOrder
 							carId={car.id}
+							refetch={fetchData}
 							open={isModalOpen}
 							onOk={closeModal}
 							onCancel={closeModal}
@@ -98,7 +99,7 @@ const DetailsCar = ({ params }: { params: { id: string } }) => {
 					<p>List Order with this Car</p>
 				</div>
 				{car?.Orders?.map((order) => {
-					return <TableComponent order={order} />;
+					return <TableComponent order={order} refetch={fetchData} />;
 				})}
 			</div>
 		</section>

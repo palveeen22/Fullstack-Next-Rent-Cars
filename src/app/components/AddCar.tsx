@@ -3,15 +3,21 @@ import { Modal } from "antd";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
-import toast, { Toaster } from "react-hot-toast";
+import Swal from "sweetalert2";
 
 interface ModalLoginProps {
 	open: boolean;
 	onOk: () => void;
 	onCancel: () => void;
+	refetch: Function;
 }
 
-const AddCar: React.FC<ModalLoginProps> = ({ open, onOk, onCancel }) => {
+const AddCar: React.FC<ModalLoginProps> = ({
+	open,
+	onOk,
+	onCancel,
+	refetch,
+}) => {
 	const [input, setInput] = useState({
 		car_name: "",
 		day_rate: 0,
@@ -84,10 +90,10 @@ const AddCar: React.FC<ModalLoginProps> = ({ open, onOk, onCancel }) => {
 				if (!response.ok) {
 					throw new Error("Add Car Failed");
 				}
-				toast.success("Car Added");
+				Swal.fire("successfully added car!");
+				await refetch();
 				router.refresh();
 				onOk();
-				router.push("/list-cars");
 			}
 		} catch (error) {
 			if (error instanceof z.ZodError) {

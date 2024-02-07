@@ -4,13 +4,14 @@ import React, { useState } from "react";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 import EditOrder from "./EditOrder";
+import Swal from "sweetalert2";
 
 type props = {
 	order: ListOrders;
-	// refetch: Function;
+	refetch: Function;
 };
 
-const TableOrder = ({ order }: props) => {
+const TableOrder = ({ order, refetch }: props) => {
 	const router = useRouter();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -20,9 +21,10 @@ const TableOrder = ({ order }: props) => {
 			method: "DELETE",
 		});
 		if (response.ok) {
-			// await refetch();
+			Swal.fire("successfully delete!");
+			await refetch();
 			router.refresh();
-			router.push("/list-cars");
+			// router.push("/list-cars");
 		}
 	};
 

@@ -6,6 +6,62 @@ type TProps = {
 	params: { id: string };
 };
 
+// ADD ORDER
+export async function POST(req: Request, { params }: TProps) {
+	console.log(params.id, "MASUK ID");
+	try {
+		const {
+			pickup_date,
+			dropoff_date,
+			pickup_location,
+			dropoff_location,
+			carsId,
+		} = (await req.json()) as {
+			order_date: Date;
+			pickup_date: Date;
+			dropoff_date: Date;
+			pickup_location: string;
+			dropoff_location: string;
+			carsId: number;
+		};
+		console.log("masuk");
+
+		const car = await prisma.cars.findUnique({
+			where: { id: parseInt(params.id) },
+		});
+
+		const order = await prisma.orders.create({
+			data: {
+				order_date: new Date(),
+				pickup_date: new Date(pickup_date),
+				dropoff_date: new Date(dropoff_date),
+				pickup_location,
+				dropoff_location,
+				carsId: car?.id,
+			},
+		});
+
+		return NextResponse.json({
+			order: {
+				order_date: order.order_date,
+				pickup_date: order.pickup_date,
+				dropoff_date: order.dropoff_date,
+				pickup_location: order.pickup_location,
+				dropoff_location: order.dropoff_location,
+				carsId: order.carsId,
+			},
+		});
+	} catch (error: any) {
+		return new NextResponse(
+			JSON.stringify({
+				status: "error",
+				message: error.message,
+			}),
+			{ status: 500 }
+		);
+	}
+}
+
 // GET order by id
 export async function GET(req: NextRequest, { params }: TProps) {
 	const order = await prisma.orders.findUnique({

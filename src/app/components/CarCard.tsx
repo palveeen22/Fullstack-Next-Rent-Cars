@@ -6,10 +6,10 @@ import Link from "next/link";
 
 type props = {
 	car: ListCars;
-	// refetch: Function;
+	refetch: Function;
 };
 
-const CarCard = ({ car }: props) => {
+const CarCard = ({ car, refetch }: props) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const closeModal = () => {
@@ -37,6 +37,7 @@ const CarCard = ({ car }: props) => {
 			</div>
 			<div className="flex justify-center gap-2 items-center px-4">
 				<EditCar
+					refetch={refetch}
 					carId={car.id}
 					open={isModalOpen}
 					onOk={closeModal}

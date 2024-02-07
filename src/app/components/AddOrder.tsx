@@ -1,19 +1,26 @@
-import React, { useState } from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import { Modal } from "antd";
 import { Icon } from "@iconify/react";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
-import toast, { Toaster } from "react-hot-toast";
+import Swal from "sweetalert2";
 
 interface AddOrder {
 	open: boolean;
 	onOk: () => void;
 	onCancel: () => void;
 	carId: number;
+	refetch: Function;
 }
 
-const AddOrder: React.FC<AddOrder> = ({ open, onOk, onCancel, carId }) => {
-	console.log(carId, "xxx");
+const AddOrder: React.FC<AddOrder> = ({
+	open,
+	onOk,
+	onCancel,
+	carId,
+	refetch,
+}) => {
 	const [input, setInput] = useState({
 		pickup_date: "",
 		dropoff_date: "",
@@ -21,6 +28,7 @@ const AddOrder: React.FC<AddOrder> = ({ open, onOk, onCancel, carId }) => {
 		dropoff_location: "",
 		carsId: carId,
 	});
+
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [error, setError] = useState("");
 
@@ -66,34 +74,45 @@ const AddOrder: React.FC<AddOrder> = ({ open, onOk, onCancel, carId }) => {
 
 	const router = useRouter();
 	const handleSubmit = async (e: React.SyntheticEvent) => {
-		e.preventDefault();
-		const formData = { ...input, carsId: carId };
-
-		const parsed = OrderInput.safeParse(formData);
-
-		if (!parsed.success) {
-			setError(parsed.error.issues[0].message);
-			return;
-		}
-
 		try {
-			const response = await fetch("http://localhost:3000/api/orders", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(parsed.data),
-			});
+			e.preventDefault();
+			const formData = { ...input, carsId: carId };
+			// console.log(formData, "FORM");
 
-			if (!response.ok) {
-				throw new Error("Add Order Failed");
+			const parsed = OrderInput.safeParse(formData);
+			// console.log(parsed, "<<<");
+
+			if (parsed.success == false) {
+				setError(parsed.error.issues[0].message);
+			} else {
+				const finalInput = JSON.stringify(formData);
+				console.log(finalInput);
+				const response = await fetch(
+					`http://localhost:3000/api/orders/${carId}`,
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: finalInput,
+					}
+				);
+				// console.log(response);
+
+				if (!response.ok) {
+					throw new Error("Add order Failed");
+				}
+				Swal.fire("successfully booked!");
+				onOk();
+				await refetch();
+				router.refresh();
 			}
-			toast.success("Order Added");
-			onOk(); // Call onOk to close modal and perhaps refresh data
-			router.push("/orders"); // Navigate to orders page
 		} catch (error) {
-			console.error(error);
-			toast.error("Failed to add order.");
+			if (error instanceof z.ZodError) {
+				console.log(error.issues);
+			} else {
+				console.log(error);
+			}
 		}
 	};
 

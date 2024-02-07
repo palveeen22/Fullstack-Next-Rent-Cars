@@ -3,16 +3,23 @@ import { Modal } from "antd";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
-import toast, { Toaster } from "react-hot-toast";
+import Swal from "sweetalert2";
 
 interface CarEdit {
+	refetch: Function;
 	carId: number;
 	open: boolean;
 	onOk: () => void;
 	onCancel: () => void;
 }
 
-const EditCar: React.FC<CarEdit> = ({ open, onOk, onCancel, carId }) => {
+const EditCar: React.FC<CarEdit> = ({
+	open,
+	onOk,
+	onCancel,
+	carId,
+	refetch,
+}) => {
 	const [input, setInput] = useState({
 		car_name: "",
 		day_rate: 0,
@@ -118,11 +125,10 @@ const EditCar: React.FC<CarEdit> = ({ open, onOk, onCancel, carId }) => {
 				if (!response.ok) {
 					throw new Error("Edit Car Failed");
 				}
-				toast.success("Car Updated");
+				Swal.fire("successfully edit car!");
+				await refetch();
 				router.refresh();
 				onOk();
-				fetchData();
-				router.push("/list-cars");
 			}
 		} catch (error) {
 			if (error instanceof z.ZodError) {

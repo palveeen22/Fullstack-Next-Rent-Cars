@@ -50,10 +50,15 @@ const ListCars = () => {
 						</p>
 					</div>
 				</Link>
-				<AddCar open={isModalOpen} onOk={closeModal} onCancel={closeModal} />
+				<AddCar
+					open={isModalOpen}
+					onOk={closeModal}
+					onCancel={closeModal}
+					refetch={fetchData}
+				/>
 				<div className="grid grid-cols-4 gap-4">
 					{cars.map((car) => (
-						<CarCard car={car} />
+						<CarCard car={car} refetch={fetchData} />
 					))}
 				</div>
 			</div>
