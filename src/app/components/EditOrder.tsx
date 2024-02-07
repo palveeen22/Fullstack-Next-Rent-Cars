@@ -3,16 +3,18 @@ import { Modal } from "antd";
 import { Icon } from "@iconify/react";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
+import { formatDate } from "@/helpers";
 
-// interface ModalLoginProps {
-// 	open: boolean;
-// 	onOk: () => void;
-// 	onCancel: () => void;
-// }
+interface orderEdit {
+	orderId: number;
+	open: boolean;
+	onOk: () => void;
+	onCancel: () => void;
+}
 
-const EditOrder: React.FC = ({ params }: { params: { id: string } }) => {
+const EditOrder: React.FC<orderEdit> = ({ open, onOk, onCancel, orderId }) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [order, setOrder] = useState({});
+	const [order, setOrder] = useState({} as ListOrders);
 	const [input, setInput] = useState({
 		pickup_date: "",
 		dropoff_date: "",
@@ -21,30 +23,71 @@ const EditOrder: React.FC = ({ params }: { params: { id: string } }) => {
 	});
 	const [error, setError] = useState("");
 
+	// const fetchData = async () => {
+	// 	try {
+	// 		const response = await fetch(
+	// 			`http://localhost:3000/api/orders/${orderId}`
+	// 		);
+
+	// 		if (!response.ok) {
+	// 			throw new Error("Failed fetching data");
+	// 		}
+
+	// 		const responseJSON = await response.json();
+	// 		setOrder(responseJSON);
+	// 	} catch (error) {
+	// 		if (error instanceof Error) {
+	// 			console.log(error.message);
+	// 		} else {
+	// 			console.log(error);
+	// 		}
+	// 	}
+	// };
+
+	// useEffect(() => {
+	// 	fetchData();
+	// }, []);
+
 	const fetchData = async () => {
 		try {
 			const response = await fetch(
-				`http://localhost:3000/api/orders/${params.id}`
+				`http://localhost:3000/api/orders/${orderId}`
 			);
-
 			if (!response.ok) {
 				throw new Error("Failed fetching data");
 			}
+			const data = await response.json();
+			setOrder(data);
 
-			const responseJSON = await response.json();
-			setOrder(responseJSON);
+			// Convert  to YYYY-MM-DD format
+			const formattedPickupDate = data.pickup_date
+				? new Date(data.pickup_date).toISOString().split("T")[0]
+				: "";
+			const formattedDropoffDate = data.dropoff_date
+				? new Date(data.dropoff_date).toISOString().split("T")[0]
+				: "";
+			setInput({
+				pickup_date: formattedPickupDate,
+				dropoff_date: formattedDropoffDate,
+				pickup_location: data.pickup_location || "",
+				dropoff_location: data.dropoff_location || "",
+			});
 		} catch (error) {
-			if (error instanceof Error) {
-				console.log(error.message);
-			} else {
-				console.log(error);
-			}
+			console.error(error);
 		}
 	};
 
 	useEffect(() => {
 		fetchData();
-	}, []);
+	}, [orderId]);
+
+	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = event.target;
+		setInput((prevInput) => ({
+			...prevInput,
+			[name]: value,
+		}));
+	};
 
 	const showModal = () => {
 		setIsModalOpen(true);
@@ -144,10 +187,8 @@ const EditOrder: React.FC = ({ params }: { params: { id: string } }) => {
 							name="pickup_date"
 							id="pickup_date"
 							className="text-black block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-							placeholder=" "
-							// onChange={(e) =>
-							// 	setInput({ ...input, pickup_date: e.target.value })
-							// }
+							value={input.pickup_date}
+							onChange={handleInputChange}
 						/>
 						<label className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
 							Pickup Date
@@ -159,10 +200,8 @@ const EditOrder: React.FC = ({ params }: { params: { id: string } }) => {
 							name="dropoff_date"
 							id="dropoff_date"
 							className="text-black block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-							placeholder=" "
-							// onChange={(e) =>
-							// 	setInput({ ...input, dropoff_date: e.target.value })
-							// }
+							value={input.dropoff_date}
+							onChange={handleInputChange}
 						/>
 						<label className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
 							Dropoff Date
@@ -174,10 +213,8 @@ const EditOrder: React.FC = ({ params }: { params: { id: string } }) => {
 							name="pickup_location"
 							id="pickup_location"
 							className="text-black block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-							placeholder=" "
-							// onChange={(e) =>
-							// 	setInput({ ...input, pickup_location: e.target.value })
-							// }
+							value={input.pickup_location}
+							onChange={handleInputChange}
 						/>
 						<label className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
 							Pickup Location
@@ -189,10 +226,8 @@ const EditOrder: React.FC = ({ params }: { params: { id: string } }) => {
 							name="dropoff_location"
 							id="dropoff_location"
 							className="text-black block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-							placeholder=" "
-							// onChange={(e) =>
-							// 	setInput({ ...input, dropoff_location: e.target.value })
-							// }
+							value={input.dropoff_location}
+							onChange={handleInputChange}
 						/>
 						<label className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
 							Dropoff Location
@@ -203,7 +238,7 @@ const EditOrder: React.FC = ({ params }: { params: { id: string } }) => {
 						type="submit"
 						className="text-white bg-blue-700 hover:bg-[#ffcd3c] font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
 					>
-						Create
+						Edit
 					</button>
 				</form>
 			</Modal>

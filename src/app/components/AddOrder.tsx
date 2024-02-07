@@ -5,19 +5,14 @@ import { z } from "zod";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 
-interface ModalLoginProps {
+interface AddOrder {
 	open: boolean;
 	onOk: () => void;
 	onCancel: () => void;
 	carId: number;
 }
 
-const AddOrder: React.FC<ModalLoginProps> = ({
-	open,
-	onOk,
-	onCancel,
-	carId,
-}) => {
+const AddOrder: React.FC<AddOrder> = ({ open, onOk, onCancel, carId }) => {
 	console.log(carId, "xxx");
 	const [input, setInput] = useState({
 		pickup_date: "",

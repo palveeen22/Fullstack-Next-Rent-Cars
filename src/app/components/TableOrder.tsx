@@ -69,7 +69,14 @@ const TableOrder = ({ order }: props) => {
 							>
 								<Icon icon="openmoji:delete" width={40} />
 							</button>
+							{/* <button
+								className="bg-blue-700 text-[#fff] m-2 mx-auto rounded-xl"
+								
+							>
+								<Icon icon="mingcute:edit-fill" width={40} />
+							</button> */}
 							<EditOrder
+								orderId={order.id}
 								open={isModalOpen}
 								onOk={closeModal}
 								onCancel={closeModal}
