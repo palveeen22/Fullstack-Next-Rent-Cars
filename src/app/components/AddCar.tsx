@@ -51,13 +51,13 @@ const AddCar: React.FC<ModalLoginProps> = ({
 				invalid_type_error: "Day Rate is Required",
 				required_error: "Day Rate is Required",
 			})
-			.min(0, { message: "Day Rate must be a positive number" }), // Assuming day_rate should be positive
+			.min(0, { message: "Day Rate must be a positive number" }),
 		month_rate: z
 			.number({
 				invalid_type_error: "Month Rate is Required",
 				required_error: "Month Rate is Required",
 			})
-			.min(0, { message: "Month Rate must be a positive number" }), // Assuming month_rate should be positive
+			.min(0, { message: "Month Rate must be a positive number" }),
 		image: z
 			.string({
 				invalid_type_error: "Image is Required",

@@ -104,13 +104,11 @@ const EditCar: React.FC<CarEdit> = ({
 			};
 
 			const parsed = CarInput.safeParse(validatedInput);
-			// console.log(parsed, "<<<");
 
 			if (parsed.success == false) {
 				setError(parsed.error.issues[0].message);
 			} else {
 				const finalInput = JSON.stringify(input);
-				// console.log(finalInput);
 				const response = await fetch(
 					`http://localhost:3000/api/cars/${carId}`,
 					{

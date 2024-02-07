@@ -44,10 +44,7 @@ const CarCard = ({ car, refetch }: props) => {
 					onCancel={closeModal}
 				/>
 				<Link href={`/list-cars/${car.id}`}>
-					<button
-						className="flex justify-start gap-4 items-center m-4 mx-auto bg-blue-600 text-white p-2 rounded-xl"
-						// onClick={showModal}
-					>
+					<button className="flex justify-start gap-4 items-center m-4 mx-auto bg-blue-600 text-white p-2 rounded-xl">
 						See Details
 						<Icon icon="solar:arrow-right-outline" width={25} />
 					</button>

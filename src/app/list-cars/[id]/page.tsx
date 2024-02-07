@@ -33,7 +33,6 @@ const DetailsCar = ({ params }: { params: { id: string } }) => {
 	};
 
 	const handleDelete = async (id: number) => {
-		// console.log(id, "numnum");
 		const response = await fetch(`http://localhost:3000/api/cars/${id}`, {
 			method: "DELETE",
 		});

@@ -77,10 +77,8 @@ const AddOrder: React.FC<AddOrder> = ({
 		try {
 			e.preventDefault();
 			const formData = { ...input, carsId: carId };
-			// console.log(formData, "FORM");
 
 			const parsed = OrderInput.safeParse(formData);
-			// console.log(parsed, "<<<");
 
 			if (parsed.success == false) {
 				setError(parsed.error.issues[0].message);
@@ -97,7 +95,6 @@ const AddOrder: React.FC<AddOrder> = ({
 						body: finalInput,
 					}
 				);
-				// console.log(response);
 
 				if (!response.ok) {
 					throw new Error("Add order Failed");

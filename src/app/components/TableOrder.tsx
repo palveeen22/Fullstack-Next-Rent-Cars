@@ -16,7 +16,6 @@ const TableOrder = ({ order, refetch }: props) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const handleDelete = async (id: number) => {
-		// console.log(id, "numnum");
 		const response = await fetch(`http://localhost:3000/api/orders/${id}`, {
 			method: "DELETE",
 		});
@@ -24,7 +23,6 @@ const TableOrder = ({ order, refetch }: props) => {
 			Swal.fire("successfully delete!");
 			await refetch();
 			router.refresh();
-			// router.push("/list-cars");
 		}
 	};
 
@@ -71,12 +69,7 @@ const TableOrder = ({ order, refetch }: props) => {
 							>
 								<Icon icon="openmoji:delete" width={40} />
 							</button>
-							{/* <button
-								className="bg-blue-700 text-[#fff] m-2 mx-auto rounded-xl"
-								
-							>
-								<Icon icon="mingcute:edit-fill" width={40} />
-							</button> */}
+							{/* modal edit form */}
 							<EditOrder
 								refetch={refetch}
 								orderId={order.id}
