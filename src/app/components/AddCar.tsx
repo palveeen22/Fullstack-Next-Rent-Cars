@@ -4,6 +4,7 @@ import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import Swal from "sweetalert2";
+import ErrorShower from "./ErrorShower";
 
 interface ModalLoginProps {
 	open: boolean;
@@ -90,10 +91,10 @@ const AddCar: React.FC<ModalLoginProps> = ({
 				if (!response.ok) {
 					throw new Error("Add Car Failed");
 				}
-				Swal.fire("successfully added car!");
 				await refetch();
 				router.refresh();
 				onOk();
+				Swal.fire("successfully added car!");
 			}
 		} catch (error) {
 			if (error instanceof z.ZodError) {
@@ -118,6 +119,7 @@ const AddCar: React.FC<ModalLoginProps> = ({
 				open={isModalOpen}
 				onOk={handleOk}
 				footer={null}
+				destroyOnClose={true}
 				onCancel={handleCancel}
 			>
 				<form className="mx-auto pt-9 pb-9" onSubmit={handleSubmit}>
