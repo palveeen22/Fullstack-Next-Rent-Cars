@@ -62,6 +62,8 @@ const DetailsCar = ({ params }: { params: { id: string } }) => {
 			</Link>
 			<div className="flex flex-col gap-4" key={car.id}>
 				<img src={car.image} className="rounded-t-3xl h-2/3 object-cover" />
+
+				{/* details card */}
 				<div className="w-full bg-[#E5E4E2] flex justify-between gap-2 paddingX py-3 rounded-3xl">
 					<div className="w-[50%] flex flex-col gap-4">
 						<h3 className="text-2xl font-light font-mono">Details : </h3>

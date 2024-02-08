@@ -11,7 +11,7 @@ export default function Home() {
 					effortlessly share your car for journeys.
 				</p>
 				<Link href={"/list-cars"}>
-					<button className="bg-[#ffcd3c] text-[#fff] m-2 w-[40%] mx-auto rounded-xl p-1">
+					<button className="bg-[#ffcd3c] text-[#fff] m-2 w-[40%] mx-auto rounded-xl py-3">
 						Get Started
 					</button>
 				</Link>

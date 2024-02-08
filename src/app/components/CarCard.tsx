@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import EditCar from "./EditCar";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type props = {
 	car: ListCars;
@@ -10,6 +11,7 @@ type props = {
 };
 
 const CarCard = ({ car, refetch }: props) => {
+	const router = useRouter();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const closeModal = () => {
@@ -22,8 +24,8 @@ const CarCard = ({ car, refetch }: props) => {
 				alt="Car"
 				className="h-48 object-cover rounded-t-3xl"
 			/>
-			<div className="flex justify-around gap-2">
-				<p>{car.car_name}</p>
+			<p className="text-[#252525] font-semibold">{car.car_name}</p>
+			{/* <div className="flex justify-around gap-2">
 				<div className="flex flex-col gap-2">
 					<span className="flex justify-center gap-2">
 						<p>{formatCurrency(car.day_rate)}</p>
@@ -34,8 +36,8 @@ const CarCard = ({ car, refetch }: props) => {
 						<p>/ Month</p>
 					</span>
 				</div>
-			</div>
-			<div className="flex justify-center gap-2 items-center px-4">
+			</div> */}
+			<div className="flex justify-center items-center px-4">
 				<EditCar
 					refetch={refetch}
 					carId={car.id}
@@ -43,12 +45,15 @@ const CarCard = ({ car, refetch }: props) => {
 					onOk={closeModal}
 					onCancel={closeModal}
 				/>
-				<Link href={`/list-cars/${car.id}`}>
-					<button className="flex justify-start gap-4 items-center m-4 mx-auto bg-blue-600 text-white p-2 rounded-xl">
-						See Details
-						<Icon icon="solar:arrow-right-outline" width={25} />
-					</button>
-				</Link>
+				<button
+					className="flex justify-start gap-4 w-[40%] items-center m-4 mx-auto bg-blue-600 text-white p-2 rounded-xl"
+					onClick={() => {
+						router.push(`/list-cars/${car.id}`);
+					}}
+				>
+					See Details
+					<Icon icon="solar:arrow-right-outline" width={25} />
+				</button>
 			</div>
 		</div>
 	);

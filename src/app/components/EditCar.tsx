@@ -150,7 +150,7 @@ const EditCar: React.FC<CarEdit> = ({
 	return (
 		<>
 			<button
-				className="flex justify-start gap-4 items-center m-4 mx-auto bg-green-600 text-white p-2 rounded-xl"
+				className="flex justify-start gap-4 w-[40%] items-center m-4 mx-auto bg-green-600 text-white p-2 rounded-xl"
 				onClick={showModal}
 			>
 				<Icon icon="iconoir:laptop-fix" width={25} />
