@@ -29,8 +29,9 @@ const AddOrder: React.FC<AddOrder> = ({
 		carsId: carId,
 	});
 
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [error, setError] = useState("");
+	const router = useRouter();
+	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+	const [error, setError] = useState<string>("");
 
 	const showModal = () => {
 		setIsModalOpen(true);
@@ -72,7 +73,6 @@ const AddOrder: React.FC<AddOrder> = ({
 		carsId: z.number(),
 	});
 
-	const router = useRouter();
 	const handleSubmit = async (e: React.SyntheticEvent) => {
 		try {
 			e.preventDefault();

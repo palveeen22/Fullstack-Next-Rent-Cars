@@ -7,7 +7,7 @@ import AddCar from "../components/AddCar";
 
 const ListCars = () => {
 	const [cars, setCars] = useState([] as ListCars[]);
-	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
 	const fetchData = async () => {
 		try {

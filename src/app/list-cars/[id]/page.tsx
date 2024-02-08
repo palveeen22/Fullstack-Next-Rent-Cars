@@ -11,7 +11,7 @@ const DetailsCar = ({ params }: { params: { id: string } }) => {
 	const router = useRouter();
 	const paramId = params.id;
 	const [car, setCar] = useState({} as ListCarsDetails);
-	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
 	const fetchData = async () => {
 		try {

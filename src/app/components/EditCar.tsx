@@ -26,7 +26,8 @@ const EditCar: React.FC<CarEdit> = ({
 		month_rate: 0,
 		image: "",
 	});
-	const [isModalOpen, setIsModalOpen] = useState(false);
+	const router = useRouter();
+	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 	const [car, setCar] = useState({} as ListCarsDetails);
 
 	const fetchData = async () => {
@@ -64,7 +65,7 @@ const EditCar: React.FC<CarEdit> = ({
 	const handleCancel = () => {
 		setIsModalOpen(false);
 	};
-	const [error, setError] = useState("");
+	const [error, setError] = useState<string>("");
 
 	const CarInput = z.object({
 		car_name: z
@@ -93,7 +94,6 @@ const EditCar: React.FC<CarEdit> = ({
 			.min(1, { message: "Image is Required" }),
 	});
 
-	const router = useRouter();
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		try {
 			e.preventDefault();

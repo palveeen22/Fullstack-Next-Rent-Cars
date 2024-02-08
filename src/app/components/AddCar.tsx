@@ -25,7 +25,8 @@ const AddCar: React.FC<ModalLoginProps> = ({
 		month_rate: 0,
 		image: "",
 	});
-	const [isModalOpen, setIsModalOpen] = useState(false);
+	const router = useRouter();
+	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
 	const showModal = () => {
 		setIsModalOpen(true);
@@ -38,7 +39,7 @@ const AddCar: React.FC<ModalLoginProps> = ({
 	const handleCancel = () => {
 		setIsModalOpen(false);
 	};
-	const [error, setError] = useState("");
+	const [error, setError] = useState<string>("");
 
 	const CarInput = z.object({
 		car_name: z
@@ -67,7 +68,6 @@ const AddCar: React.FC<ModalLoginProps> = ({
 			.min(1, { message: "Image is Required" }),
 	});
 
-	const router = useRouter();
 	const handleSubmit = async (e: React.SyntheticEvent) => {
 		try {
 			e.preventDefault();
