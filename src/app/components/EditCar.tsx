@@ -124,9 +124,9 @@ const EditCar: React.FC<CarEdit> = ({
 					throw new Error("Edit Car Failed");
 				}
 				Swal.fire("successfully edit car!");
+				setIsModalOpen(false);
 				await refetch();
 				router.refresh();
-				onOk();
 			}
 		} catch (error) {
 			if (error instanceof z.ZodError) {

@@ -100,8 +100,8 @@ const AddOrder: React.FC<AddOrder> = ({
 					throw new Error("Add order Failed");
 				}
 				Swal.fire("successfully booked!");
-				onOk();
 				await refetch();
+				setIsModalOpen(false);
 				router.refresh();
 			}
 		} catch (error) {

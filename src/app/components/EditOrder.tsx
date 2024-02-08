@@ -142,8 +142,8 @@ const EditOrder: React.FC<orderEdit> = ({
 				}
 				Swal.fire("successfully edit your booking!");
 				await refetch();
+				setIsModalOpen(false);
 				router.refresh();
-				onOk();
 			}
 		} catch (error) {
 			if (error instanceof z.ZodError) {

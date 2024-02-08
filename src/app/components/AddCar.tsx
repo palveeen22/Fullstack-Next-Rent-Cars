@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal } from "antd";
+import { Modal, Button } from "antd";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
@@ -93,7 +93,7 @@ const AddCar: React.FC<ModalLoginProps> = ({
 				}
 				await refetch();
 				router.refresh();
-				onOk();
+				setIsModalOpen(false);
 				Swal.fire("successfully added car!");
 			}
 		} catch (error) {
@@ -107,13 +107,13 @@ const AddCar: React.FC<ModalLoginProps> = ({
 
 	return (
 		<>
-			<button
-				className="bg-[#ffcd3c] text-[#fff] m-2  ml-auto p-2 flex items-center gap-2 rounded-xl hover:bg-blue-500"
+			<Button
+				className="bg-[#ffcd3c] py-6 text-[#fff] m-2  ml-auto p-2 flex items-center gap-2 rounded-xl hover:bg-blue-500"
 				onClick={showModal}
 			>
 				<Icon icon="icon-park-solid:add" width={40} />
 				Add Car
-			</button>
+			</Button>
 			<Modal
 				title="Input Your Car Here.."
 				open={isModalOpen}
