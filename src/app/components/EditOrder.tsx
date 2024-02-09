@@ -20,15 +20,15 @@ const EditOrder: React.FC<orderEdit> = ({
 	orderId,
 	refetch,
 }) => {
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [order, setOrder] = useState({} as ListOrders);
-	const [input, setInput] = useState({
+	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+	const [order, setOrder] = useState<ListOrders>();
+	const [input, setInput] = useState<inputOrderEdit>({
 		pickup_date: "",
 		dropoff_date: "",
 		pickup_location: "",
 		dropoff_location: "",
 	});
-	const [error, setError] = useState("");
+	const [error, setError] = useState<string>("");
 
 	const fetchData = async () => {
 		try {

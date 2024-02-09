@@ -21,7 +21,7 @@ const AddOrder: React.FC<AddOrder> = ({
 	carId,
 	refetch,
 }) => {
-	const [input, setInput] = useState({
+	const [input, setInput] = useState<inputOrder>({
 		pickup_date: "",
 		dropoff_date: "",
 		pickup_location: "",

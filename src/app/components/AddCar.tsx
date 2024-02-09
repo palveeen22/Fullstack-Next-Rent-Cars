@@ -19,7 +19,7 @@ const AddCar: React.FC<ModalLoginProps> = ({
 	onCancel,
 	refetch,
 }) => {
-	const [input, setInput] = useState({
+	const [input, setInput] = useState<inputCar>({
 		car_name: "",
 		day_rate: 0,
 		month_rate: 0,

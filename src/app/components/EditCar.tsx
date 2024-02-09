@@ -20,7 +20,7 @@ const EditCar: React.FC<CarEdit> = ({
 	carId,
 	refetch,
 }) => {
-	const [input, setInput] = useState({
+	const [input, setInput] = useState<inputCar>({
 		car_name: "",
 		day_rate: 0,
 		month_rate: 0,
@@ -28,7 +28,7 @@ const EditCar: React.FC<CarEdit> = ({
 	});
 	const router = useRouter();
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-	const [car, setCar] = useState({} as ListCarsDetails);
+	const [car, setCar] = useState<ListCarsDetails>();
 
 	const fetchData = async () => {
 		try {
