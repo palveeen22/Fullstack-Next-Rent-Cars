@@ -4,6 +4,7 @@ import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import Swal from "sweetalert2";
+import ErrorShower from "./ErrorShower";
 
 interface CarEdit {
 	refetch: Function;
@@ -131,6 +132,7 @@ const EditCar: React.FC<CarEdit> = ({
 		} catch (error) {
 			if (error instanceof z.ZodError) {
 				console.log(error.issues);
+				setError(error instanceof Error ? error.message : "invalid input");
 			} else {
 				console.log(error);
 			}
@@ -164,6 +166,11 @@ const EditCar: React.FC<CarEdit> = ({
 				onCancel={handleCancel}
 			>
 				<form className="mx-auto pt-9 pb-9" onSubmit={handleSubmit}>
+					{error && (
+						<p className="animate-pulse rounded bg-red-400 px-4 py-2 text-center text-white">
+							{error}
+						</p>
+					)}
 					<div className="relative z-0 w-full mb-5 group">
 						<input
 							type="text"
@@ -216,7 +223,6 @@ const EditCar: React.FC<CarEdit> = ({
 							Image Car
 						</label>
 					</div>
-
 					<button
 						type="submit"
 						className="text-white bg-blue-700 hover:bg-[#ffcd3c] font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"

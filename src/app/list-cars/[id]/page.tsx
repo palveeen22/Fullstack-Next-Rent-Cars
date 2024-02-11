@@ -6,6 +6,7 @@ import TableComponent from "@/app/components/TableOrder";
 import AddOrder from "@/app/components/AddOrder";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+import Image from "next/image";
 
 const DetailsCar = ({ params }: { params: { id: string } }) => {
 	const router = useRouter();
@@ -61,6 +62,15 @@ const DetailsCar = ({ params }: { params: { id: string } }) => {
 				</div>
 			</Link>
 			<div className="flex flex-col gap-4" key={car.id}>
+				{/* <Image
+					src={car.image}
+					className="rounded-t-3xl"
+					alt="rental-mobil-picture"
+					width={400}
+					height={400}
+					layout="responsive"
+				/> */}
+
 				<img src={car.image} className="rounded-t-3xl h-2/3 object-cover" />
 
 				{/* details card */}

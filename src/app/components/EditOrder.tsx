@@ -148,6 +148,7 @@ const EditOrder: React.FC<orderEdit> = ({
 		} catch (error) {
 			if (error instanceof z.ZodError) {
 				console.log(error.issues);
+				setError(error instanceof Error ? error.message : "invalid input");
 			} else {
 				console.log(error);
 			}
@@ -178,6 +179,11 @@ const EditOrder: React.FC<orderEdit> = ({
 				onCancel={handleCancel}
 			>
 				<form className="mx-auto pt-9 pb-9" onSubmit={handleSubmit}>
+					{error && (
+						<p className="animate-pulse rounded bg-red-400 px-4 py-2 text-center text-white">
+							{error}
+						</p>
+					)}
 					<div className="relative z-0 w-full mb-5 group">
 						<input
 							type="date"

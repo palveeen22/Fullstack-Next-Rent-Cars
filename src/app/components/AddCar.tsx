@@ -44,28 +44,24 @@ const AddCar: React.FC<ModalLoginProps> = ({
 	const CarInput = z.object({
 		car_name: z
 			.string({
-				invalid_type_error: "Name is Required",
-				required_error: "Name is Required",
+				invalid_type_error: "Car Name is Required",
 			})
-			.min(1, { message: "Name is Required" }),
+			.min(1, "Car Name is Required"),
 		day_rate: z
 			.number({
 				invalid_type_error: "Day Rate is Required",
-				required_error: "Day Rate is Required",
 			})
-			.min(0, { message: "Day Rate must be a positive number" }),
+			.min(0, "Day Rate must be a positive number"),
 		month_rate: z
 			.number({
 				invalid_type_error: "Month Rate is Required",
-				required_error: "Month Rate is Required",
 			})
-			.min(0, { message: "Month Rate must be a positive number" }),
+			.min(0, "Month Rate must be a positive number"),
 		image: z
 			.string({
 				invalid_type_error: "Image is Required",
-				required_error: "Image is Required",
 			})
-			.min(1, { message: "Image is Required" }),
+			.min(1, "Image is Required"),
 	});
 
 	const handleSubmit = async (e: React.SyntheticEvent) => {
@@ -99,6 +95,7 @@ const AddCar: React.FC<ModalLoginProps> = ({
 		} catch (error) {
 			if (error instanceof z.ZodError) {
 				console.log(error.issues);
+				setError(error instanceof Error ? error.message : "invalid input");
 			} else {
 				console.log(error);
 			}
@@ -123,6 +120,11 @@ const AddCar: React.FC<ModalLoginProps> = ({
 				onCancel={handleCancel}
 			>
 				<form className="mx-auto pt-9 pb-9" onSubmit={handleSubmit}>
+					{error && (
+						<p className="animate-pulse rounded bg-red-400 px-4 py-2 text-center text-white">
+							{error}
+						</p>
+					)}
 					<div className="relative z-0 w-full mb-5 group">
 						<input
 							type="text"
